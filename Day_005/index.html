@@ -1,0 +1,172 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Neon Defender 365 - Game Arcade Space Shooter Neon Futuristik untuk Day 005 Proyek 365 Days.">
+    <title>Neon Defender 365 | Day 005 - 365 Days Project</title>
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="game-container">
+        <!-- Main Canvas -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Top Header Navigation / Title Bar -->
+        <header class="top-bar">
+            <div class="brand">
+                <span class="day-badge">DAY 005</span>
+                <h1>NEON DEFENDER</h1>
+            </div>
+            <div class="top-actions">
+                <button id="soundToggleBtn" class="icon-btn" title="Toggle Sound">
+                    <span id="soundIcon">🔊</span>
+                </button>
+                <button id="howToPlayBtn" class="btn btn-secondary">Cara Bermain</button>
+            </div>
+        </header>
+
+        <!-- HUD (In-Game Overlay) -->
+        <div id="hud" class="hud-container hidden">
+            <div class="hud-item score-box">
+                <span class="hud-label">SKOR</span>
+                <span id="scoreVal" class="hud-value">0</span>
+            </div>
+            <div class="hud-item wave-box">
+                <span class="hud-label">GELOMBANG</span>
+                <span id="waveVal" class="hud-value">1</span>
+            </div>
+            <div class="hud-item health-box">
+                <span class="hud-label">SHIELD HP</span>
+                <div class="bar-outer">
+                    <div id="healthBar" class="bar-inner health-fill"></div>
+                </div>
+            </div>
+            <div class="hud-item ultimate-box">
+                <span class="hud-label">ULTIMATE (SPACE)</span>
+                <div class="bar-outer">
+                    <div id="ultimateBar" class="bar-inner ultimate-fill"></div>
+                </div>
+            </div>
+            <div class="hud-item active-powerups" id="powerupContainer">
+                <!-- Power-up indicators dynamically added here -->
+            </div>
+        </div>
+
+        <!-- Start Screen Overlay -->
+        <div id="startScreen" class="overlay-screen">
+            <div class="glass-card start-card">
+                <div class="glow-logo">
+                    <div class="cyber-ring"></div>
+                    <h2>NEON DEFENDER</h2>
+                    <p class="subtitle">365 DAYS CODING CHALLENGE - DAY 005</p>
+                </div>
+
+                <div class="high-score-display">
+                    <span>🏆 HIGH SCORE:</span>
+                    <strong id="startHighScoreVal">0</strong>
+                </div>
+
+                <div class="difficulty-select">
+                    <label>Tingkat Kesulitan:</label>
+                    <div class="diff-buttons">
+                        <button class="diff-btn" data-diff="easy">Santai</button>
+                        <button class="diff-btn active" data-diff="normal">Normal</button>
+                        <button class="diff-btn" data-diff="hard">Ekstrem</button>
+                    </div>
+                </div>
+
+                <div class="action-group">
+                    <button id="startBtn" class="btn btn-primary btn-large">
+                        <span class="pulse-ring"></span>
+                        MULAI GAME
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- How To Play Modal -->
+        <div id="howToPlayModal" class="overlay-screen hidden">
+            <div class="glass-card modal-card">
+                <h2>CARA BERMAIN</h2>
+                <div class="instructions-grid">
+                    <div class="inst-item">
+                        <div class="key-badge">WASD / ⬅️➡️⬆️⬇️</div>
+                        <p>Gerakkan Pesawat</p>
+                    </div>
+                    <div class="inst-item">
+                        <div class="key-badge">Klik Kiri / Tahan</div>
+                        <p>Tembak Laser Cannon</p>
+                    </div>
+                    <div class="inst-item">
+                        <div class="key-badge">SPACE</div>
+                        <p>Aktifkan Mega Pulse Ultimate (saat Penuh)</p>
+                    </div>
+                    <div class="inst-item">
+                        <div class="key-badge">P / ESC</div>
+                        <p>Jeda (Pause) Game</p>
+                    </div>
+                </div>
+                <div class="powerups-info">
+                    <h3>Power-Up Items:</h3>
+                    <ul>
+                        <li><span class="p-icon triple">⚡</span> <strong>Triple Shot:</strong> Tembakan 3 arah</li>
+                        <li><span class="p-icon laser">💥</span> <strong>Beam Laser:</strong> Laser Penghancur</li>
+                        <li><span class="p-icon shield">🛡️</span> <strong>Shield Boost:</strong> Pulihkan Perisai</li>
+                        <li><span class="p-icon freeze">❄️</span> <strong>Time Freeze:</strong> Perlambat Musuh</li>
+                    </ul>
+                </div>
+                <button id="closeModalBtn" class="btn btn-secondary">Tutup</button>
+            </div>
+        </div>
+
+        <!-- Pause Overlay -->
+        <div id="pauseScreen" class="overlay-screen hidden">
+            <div class="glass-card pause-card">
+                <h2>GAME DIJEDA</h2>
+                <div class="action-group">
+                    <button id="resumeBtn" class="btn btn-primary">Lanjutkan</button>
+                    <button id="restartPauseBtn" class="btn btn-secondary">Mulai Ulang</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameOverScreen" class="overlay-screen hidden">
+            <div class="glass-card game-over-card">
+                <h2 class="text-danger">GAME OVER</h2>
+                <p id="newHighScoreAlert" class="new-record hidden">🎉 REKOR BARU TERCAPAI! 🎉</p>
+                
+                <div class="stats-summary">
+                    <div class="stat-row">
+                        <span>Skor Akhir:</span>
+                        <strong id="finalScoreVal">0</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>High Score:</span>
+                        <strong id="finalHighScoreVal">0</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Gelombang Bertahan:</span>
+                        <strong id="finalWaveVal">1</strong>
+                    </div>
+                    <div class="stat-row">
+                        <span>Musuh Dihancurkan:</span>
+                        <strong id="finalKillsVal">0</strong>
+                    </div>
+                </div>
+
+                <div class="action-group">
+                    <button id="restartBtn" class="btn btn-primary btn-large">COBA LAGI</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
