@@ -1,0 +1,232 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyber Strike: Neon Survivor - Game Action Arena Rogue-lite futuristik bernuansa Cyberpunk Neon untuk Tantangan 365 Days (Day 006).">
+    <meta name="keywords" content="Cyber Strike, Neon Survivor, HTML5 Game, Canvas Game, Cyberpunk Game, JavaScript Game, 365 Days Challenge">
+    <meta name="author" content="Nuzaimbirri">
+    <title>Day 006 - Cyber Strike: Neon Survivor</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&display=swap" rel="stylesheet">
+    
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Canvas Decor -->
+    <div class="cyber-bg-glow"></div>
+    
+    <!-- Main Game Wrapper -->
+    <div id="game-container" class="game-container">
+        
+        <!-- Game Canvas Layer -->
+        <canvas id="gameCanvas"></canvas>
+
+        <!-- Overlay HUD (Active In Game) -->
+        <div id="game-hud" class="hud-container hidden">
+            <!-- Top Header Stats -->
+            <div class="hud-top-bar">
+                <div class="hud-card player-status">
+                    <div class="status-header">
+                        <span class="hud-label">HEALTH</span>
+                        <span id="hp-text" class="hud-value-text">100 / 100</span>
+                    </div>
+                    <div class="bar-container hp-bar-bg">
+                        <div id="hp-bar-fill" class="bar-fill hp-fill" style="width: 100%;"></div>
+                    </div>
+                    
+                    <div class="status-header margin-top-xs">
+                        <span class="hud-label">SHIELD</span>
+                        <span id="shield-text" class="hud-value-text">50 / 50</span>
+                    </div>
+                    <div class="bar-container shield-bar-bg">
+                        <div id="shield-bar-fill" class="bar-fill shield-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <div class="hud-card center-info">
+                    <div class="wave-badge">
+                        <span class="wave-title">WAVE</span>
+                        <span id="wave-number" class="wave-value">1</span>
+                    </div>
+                    <div class="timer-display">
+                        <span id="game-timer">00:00</span>
+                    </div>
+                </div>
+
+                <div class="hud-card score-status">
+                    <div class="stat-item">
+                        <span class="hud-label">SCORE</span>
+                        <span id="score-text" class="hud-value">0</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="hud-label">KILLS</span>
+                        <span id="kills-text" class="hud-value">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- XP Level Bar -->
+            <div class="hud-xp-bar-container">
+                <div class="xp-info">
+                    <span class="level-badge">LVL <span id="player-level">1</span></span>
+                    <span id="xp-text" class="xp-text font-accent">0 / 100 XP</span>
+                </div>
+                <div class="bar-container xp-bar-bg">
+                    <div id="xp-bar-fill" class="bar-fill xp-fill" style="width: 0%;"></div>
+                </div>
+            </div>
+
+            <!-- Skill & Cooldown Display -->
+            <div class="hud-skills-bar">
+                <div class="skill-icon-box" id="dash-skill-box">
+                    <span class="skill-key">SHIFT / SPACE</span>
+                    <div class="skill-name">CYBER DASH</div>
+                    <div id="dash-cooldown-overlay" class="cooldown-overlay"></div>
+                </div>
+                <div class="skill-icon-box" id="auto-aim-box">
+                    <span class="skill-key">MODE</span>
+                    <div id="aim-mode-text" class="skill-name">MANUAL AIM</div>
+                </div>
+            </div>
+
+            <!-- Boss Health Bar (Hidden until boss spawns) -->
+            <div id="boss-hud-container" class="boss-hud hidden">
+                <div class="boss-title-row">
+                    <span id="boss-name" class="boss-name">WARNING: CYBER DREADNOUGHT</span>
+                    <span id="boss-hp-text" class="boss-hp-val">5000 / 5000</span>
+                </div>
+                <div class="bar-container boss-bar-bg">
+                    <div id="boss-hp-fill" class="bar-fill boss-fill" style="width: 100%;"></div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Start Screen Screen -->
+        <div id="start-screen" class="overlay-screen flex-center">
+            <div class="glass-card main-menu-card">
+                <div class="cyber-glitch-title" data-text="CYBER STRIKE">CYBER STRIKE</div>
+                <div class="subtitle-tag font-accent">NEON SURVIVOR • DAY 006</div>
+
+                <div class="game-description">
+                    <p>Bertahan hidup dari gempuran cyber-drone & mecha mutan! Kumpulkan XP, buka senjata laser canggih, raih combo tertinggi, dan hancurkan Mega Boss.</p>
+                </div>
+
+                <div class="high-score-banner">
+                    <span>🏆 REKOR TERTINGGI: <strong id="menu-high-score">0</strong></span>
+                </div>
+
+                <div class="controls-guide">
+                    <h3>🎮 KONTROL GAME</h3>
+                    <div class="controls-grid">
+                        <div class="control-item"><kbd>W</kbd><kbd>A</kbd><kbd>S</kbd><kbd>D</kbd> / <kbd>🠔 🠖 🠕 🠗</kbd> <span>Gerak Pesawat</span></div>
+                        <div class="control-item"><kbd>SHIFT</kbd> / <kbd>SPACE</kbd> <span>Cyber Dash (Invulnerable)</span></div>
+                        <div class="control-item"><kbd>MOUSE</kbd> <span>Arahkan & Tembak Manual</span></div>
+                        <div class="control-item"><kbd>T</kbd> <span>Toggle Auto-Aim / Manual</span></div>
+                        <div class="control-item"><kbd>P</kbd> / <kbd>ESC</kbd> <span>Pause Game</span></div>
+                    </div>
+                </div>
+
+                <div class="button-group">
+                    <button id="btn-start" class="cyber-button primary-button">
+                        <span class="btn-glow"></span>
+                        <span class="btn-text">MULAI MISI SURVIVAL</span>
+                    </button>
+                    <button id="btn-sound-toggle" class="cyber-button secondary-button">
+                        <span id="sound-toggle-text">🔊 AUDIO: ON</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Level Up Modal (Appears on level gain) -->
+        <div id="levelup-screen" class="overlay-screen flex-center hidden">
+            <div class="glass-card levelup-card">
+                <h2 class="levelup-title glow-cyan">SYSTEM OVERCLOCK UPGRADE!</h2>
+                <p class="levelup-sub font-accent">Pilih modul peningkatan sistem perang Anda:</p>
+                
+                <div id="upgrade-cards-container" class="cards-grid">
+                    <!-- Cards injected via JS dynamically -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Pause Screen -->
+        <div id="pause-screen" class="overlay-screen flex-center hidden">
+            <div class="glass-card pause-card">
+                <h2 class="pause-title glow-yellow">GAME DIJEDA</h2>
+                <div class="settings-list">
+                    <div class="setting-row">
+                        <span>Efek Suara & Musik</span>
+                        <button id="pause-sound-btn" class="cyber-button sm">AUDIO: ON</button>
+                    </div>
+                    <div class="setting-row">
+                        <span>Mode Ztarget Aim</span>
+                        <button id="pause-aim-btn" class="cyber-button sm">AUTO-AIM: OFF</button>
+                    </div>
+                    <div class="setting-row">
+                        <span>Efek Guncangan Layar</span>
+                        <button id="pause-shake-btn" class="cyber-button sm">SHAKE: ON</button>
+                    </div>
+                </div>
+                <div class="button-group margin-top-md">
+                    <button id="btn-resume" class="cyber-button primary-button">LANJUTKAN</button>
+                    <button id="btn-restart-pause" class="cyber-button danger-button">ULANGI GAME</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Game Over Screen -->
+        <div id="gameover-screen" class="overlay-screen flex-center hidden">
+            <div class="glass-card gameover-card">
+                <h2 id="gameover-title" class="gameover-title glow-red">SISTEM HANCUR!</h2>
+                <p id="gameover-subtitle" class="font-accent">Koneksi Cyber Core Terputus</p>
+
+                <div class="summary-stats-box">
+                    <div class="summary-row">
+                        <span>Skor Akhir</span>
+                        <strong id="final-score" class="stat-highlight">0</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Waktu Bertahan</span>
+                        <strong id="final-time">00:00</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Wave Terakhir</span>
+                        <strong id="final-wave">1</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Musuh Dimusnahkan</span>
+                        <strong id="final-kills">0</strong>
+                    </div>
+                    <div class="summary-row">
+                        <span>Level Akhir</span>
+                        <strong id="final-level">1</strong>
+                    </div>
+                </div>
+
+                <div id="new-highscore-badge" class="highscore-alert hidden">
+                    🎉 REKOR SKOR BARU DIABALKAN! 🎉
+                </div>
+
+                <div class="button-group margin-top-md">
+                    <button id="btn-restart" class="cyber-button primary-button">
+                        <span class="btn-text">MAIN LAGI</span>
+                    </button>
+                    <button id="btn-main-menu" class="cyber-button secondary-button">
+                        MENU UTAMA
+                    </button>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <!-- JavaScript Bundle -->
+    <script src="script.js"></script>
+</body>
+</html>
