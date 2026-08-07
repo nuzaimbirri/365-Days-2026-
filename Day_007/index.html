@@ -1,0 +1,317 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cyber Core: Grid Defense - Game Strategi Tower Defense Futuristik karya Day 007 dalam proyek 365 Days Code.">
+    <title>Day 007 - Cyber Core: Grid Defense</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Animated Grid overlay -->
+    <div class="cyber-bg-overlay"></div>
+
+    <div class="app-container">
+        <!-- Main Header -->
+        <header class="cyber-header">
+            <div class="brand-section">
+                <span class="badge">DAY 007</span>
+                <h1 class="game-title">CYBER CORE <span class="accent-text">GRID DEFENSE</span></h1>
+            </div>
+            
+            <div class="stats-bar">
+                <div class="stat-card" id="stat-core-hp">
+                    <div class="stat-icon">🛡️</div>
+                    <div class="stat-info">
+                        <span class="stat-label">CORE HP</span>
+                        <span class="stat-value" id="core-hp-val">100 / 100</span>
+                    </div>
+                    <div class="hp-bar-outer"><div class="hp-bar-inner" id="core-hp-bar" style="width: 100%;"></div></div>
+                </div>
+
+                <div class="stat-card" id="stat-energy">
+                    <div class="stat-icon">⚡</div>
+                    <div class="stat-info">
+                        <span class="stat-label">CYBER CREDITS</span>
+                        <span class="stat-value highlight" id="energy-val">350</span>
+                    </div>
+                </div>
+
+                <div class="stat-card" id="stat-wave">
+                    <div class="stat-icon">🌊</div>
+                    <div class="stat-info">
+                        <span class="stat-label">WAVE</span>
+                        <span class="stat-value" id="wave-val">0 / 25</span>
+                    </div>
+                </div>
+
+                <div class="stat-card" id="stat-score">
+                    <div class="stat-icon">🏆</div>
+                    <div class="stat-info">
+                        <span class="stat-label">SCORE</span>
+                        <span class="stat-value" id="score-val">0</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button id="btn-sound" class="icon-btn" title="Toggle Audio">🔊</button>
+                <button id="btn-pause" class="icon-btn" title="Pause Game">⏸️</button>
+                <button id="btn-speed" class="icon-btn" title="Game Speed (1x)">1x</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace -->
+        <main class="game-workspace">
+            <!-- Left Sidebar: Towers & Construction -->
+            <aside class="sidebar left-panel">
+                <div class="panel-header">
+                    <h2><span class="icon">🛠️</span> MENARA DEFENSE</h2>
+                    <p class="subtitle">Pilih & Pasang di Grid</p>
+                </div>
+
+                <div class="tower-selector" id="tower-selector">
+                    <!-- Towers loaded via JS -->
+                    <div class="tower-card active" data-type="pulse">
+                        <div class="tower-preview pulse-preview"></div>
+                        <div class="tower-details">
+                            <div class="tower-name">PULSE LASER</div>
+                            <div class="tower-cost">⚡ 100</div>
+                            <div class="tower-desc">Tembakan cepat target tunggal.</div>
+                        </div>
+                    </div>
+
+                    <div class="tower-card" data-type="plasma">
+                        <div class="tower-preview plasma-preview"></div>
+                        <div class="tower-details">
+                            <div class="tower-name">PLASMA BOMB</div>
+                            <div class="tower-cost">⚡ 175</div>
+                            <div class="tower-desc">Area of Effect (AoE) ledakan plasma.</div>
+                        </div>
+                    </div>
+
+                    <div class="tower-card" data-type="cryo">
+                        <div class="tower-preview cryo-preview"></div>
+                        <div class="tower-details">
+                            <div class="tower-name">CRYO BEAM</div>
+                            <div class="tower-cost">⚡ 150</div>
+                            <div class="tower-desc">Memperlambat musuh hingga 60%.</div>
+                        </div>
+                    </div>
+
+                    <div class="tower-card" data-type="tesla">
+                        <div class="tower-preview tesla-preview"></div>
+                        <div class="tower-details">
+                            <div class="tower-name">TESLA COIL</div>
+                            <div class="tower-cost">⚡ 225</div>
+                            <div class="tower-desc">Petir merambat ke 3-5 musuh.</div>
+                        </div>
+                    </div>
+
+                    <div class="tower-card" data-type="railgun">
+                        <div class="tower-preview railgun-preview"></div>
+                        <div class="tower-details">
+                            <div class="tower-name">RAILGUN SNIPER</div>
+                            <div class="tower-cost">⚡ 300</div>
+                            <div class="tower-desc">Jangkauan ekstrem & armor pierce.</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Tactical Super Skills -->
+                <div class="panel-header section-divider">
+                    <h2><span class="icon">🚀</span> SKILL TAKTIS</h2>
+                </div>
+
+                <div class="tactical-skills">
+                    <button id="skill-orbital" class="skill-btn" disabled>
+                        <span class="skill-icon">💥</span>
+                        <div class="skill-info">
+                            <span class="skill-title">ORBITAL LASER</span>
+                            <span class="skill-sub">Hancurkan musuh di area pilih (⚡ 200)</span>
+                        </div>
+                    </button>
+
+                    <button id="skill-emp" class="skill-btn" disabled>
+                        <span class="skill-icon">⚡</span>
+                        <div class="skill-info">
+                            <span class="skill-title">EMP PULSE</span>
+                            <span class="skill-sub">Stun semua musuh selama 4 detik (⚡ 150)</span>
+                        </div>
+                    </button>
+                </div>
+            </aside>
+
+            <!-- Center Game Canvas Container -->
+            <section class="canvas-wrapper">
+                <div class="canvas-header-bar">
+                    <div class="wave-progress-info">
+                        <span id="next-wave-title">GELOMBANG BERIKUTNYA:</span>
+                        <span id="next-wave-details" class="accent-text">Standby</span>
+                    </div>
+                    <button id="btn-start-wave" class="btn-primary glow-btn">
+                        <span class="btn-icon">▶</span> MULAI GELOMBANG (<span id="wave-counter-btn">1</span>)
+                    </button>
+                </div>
+
+                <div class="canvas-container">
+                    <canvas id="gameCanvas" width="960" height="600"></canvas>
+                    
+                    <!-- Floating Tower Context Menu (Upgrade / Sell) -->
+                    <div id="tower-inspector" class="inspector-popup hidden">
+                        <div class="inspector-header">
+                            <span id="inspect-name">PULSE LASER LVL 1</span>
+                            <button id="inspect-close" class="close-btn">&times;</button>
+                        </div>
+                        <div class="inspector-stats">
+                            <div><span>Damage:</span> <b id="inspect-damage">15</b></div>
+                            <div><span>Jangkauan:</span> <b id="inspect-range">120</b></div>
+                            <div><span>Kecepatan:</span> <b id="inspect-firerate">1.5/s</b></div>
+                            <div><span>Total Kills:</span> <b id="inspect-kills">0</b></div>
+                        </div>
+                        <div class="inspector-actions">
+                            <button id="btn-upgrade-tower" class="btn-action btn-upgrade">
+                                🔼 UPGRADE (<span id="inspect-upgrade-cost">⚡ 100</span>)
+                            </button>
+                            <button id="btn-sell-tower" class="btn-action btn-sell">
+                                💰 JUAL (<span id="inspect-sell-refund">⚡ 75</span>)
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Right Sidebar: Wave Radar & Enemy Intelligence -->
+            <aside class="sidebar right-panel">
+                <div class="panel-header">
+                    <h2><span class="icon">🛰️</span> INTELIJEN MUSUH</h2>
+                    <p class="subtitle">Tipe Musuh Memasuki Area</p>
+                </div>
+
+                <div class="enemy-intel-list">
+                    <div class="intel-card">
+                        <div class="intel-icon drone-icon"></div>
+                        <div class="intel-info">
+                            <h4>CYBER DRONE</h4>
+                            <p>Cepat, HP rendah. Rentan terhadap Pulse Laser.</p>
+                        </div>
+                    </div>
+
+                    <div class="intel-card">
+                        <div class="intel-icon runner-icon"></div>
+                        <div class="intel-info">
+                            <h4>SPEED RUNNER</h4>
+                            <p>Sangat cepat! Butuh Cryo Beam untuk memperlambat.</p>
+                        </div>
+                    </div>
+
+                    <div class="intel-card">
+                        <div class="intel-icon tank-icon"></div>
+                        <div class="intel-info">
+                            <h4>HEAVY MECH</h4>
+                            <p>HP Sangat Tebal. Cocok dilawan dengan Plasma Bomb.</p>
+                        </div>
+                    </div>
+
+                    <div class="intel-card">
+                        <div class="intel-icon shield-icon"></div>
+                        <div class="intel-info">
+                            <h4>SHIELDED SPECTRE</h4>
+                            <p>Memiliki Tameng Kuat. Sangat cocok diserang Railgun.</p>
+                        </div>
+                    </div>
+
+                    <div class="intel-card">
+                        <div class="intel-icon boss-icon"></div>
+                        <div class="intel-info">
+                            <h4>TITAN BOSS</h4>
+                            <p>Muncul di Wave 10, 20 & 25. HP Raksasa & Regenerasi.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="panel-header section-divider">
+                    <h2><span class="icon">📊</span> STATISTIK PERTANDINGAN</h2>
+                </div>
+
+                <div class="game-stats-box">
+                    <div class="stat-line"><span>Musuh Dieliminasi:</span> <b id="stat-kills-total">0</b></div>
+                    <div class="stat-line"><span>Menara Terpasang:</span> <b id="stat-towers-built">0</b></div>
+                    <div class="stat-line"><span>Total Kredit Didapat:</span> <b id="stat-total-credits">350</b></div>
+                </div>
+            </aside>
+        </main>
+    </div>
+
+    <!-- Start / Instructions Modal -->
+    <div id="modal-start" class="modal-backdrop">
+        <div class="modal-card">
+            <div class="modal-header">
+                <span class="badge-modal">WELCOME OPERATOR</span>
+                <h2>CYBER CORE: GRID DEFENSE</h2>
+            </div>
+            <div class="modal-body">
+                <p>Selamat datang di sistem pertahanan Cyber Core 007! Musuh varian malware cyber menyerang jaringan utama dari 2 jalur berbeda.</p>
+                <div class="instruction-grid">
+                    <div class="inst-item">
+                        <span class="inst-num">1</span>
+                        <p>Pilih menara pertahanan di panel kiri dan klik lokasi grid untuk memasangnya.</p>
+                    </div>
+                    <div class="inst-item">
+                        <span class="inst-num">2</span>
+                        <p>Klik menara yang sudah terpasang untuk <b>Upgrade</b> atau <b>Menjualnya</b>.</p>
+                    </div>
+                    <div class="inst-item">
+                        <span class="inst-num">3</span>
+                        <p>Gunakan Skill Taktis (Orbital Strike / EMP) saat gelombang musuh terlalu banyak!</p>
+                    </div>
+                    <div class="inst-item">
+                        <span class="inst-num">4</span>
+                        <p>Lindungi Cyber Core utama agar HP tidak habis sampai Gelombang 25 Selesai!</p>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="btn-game-start" class="btn-primary glow-btn large-btn">MULAI PERMAINAN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over / Victory Modal -->
+    <div id="modal-gameover" class="modal-backdrop hidden">
+        <div class="modal-card text-center">
+            <h2 id="end-status-title" class="gameover-title">SYSTEM COMPROMISED</h2>
+            <p id="end-status-msg">Core pertahanan telah hancur oleh serangan virus.</p>
+            
+            <div class="end-stats-container">
+                <div class="end-stat">
+                    <span>SKOR AKHIR</span>
+                    <h3 id="end-score">0</h3>
+                </div>
+                <div class="end-stat">
+                    <span>GELOMBANG BERTAHAN</span>
+                    <h3 id="end-waves">0 / 25</h3>
+                </div>
+                <div class="end-stat">
+                    <span>TOTAL KILLS</span>
+                    <h3 id="end-kills">0</h3>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btn-restart" class="btn-primary glow-btn large-btn">MAIN LAGI</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="script.js"></script>
+</body>
+</html>
