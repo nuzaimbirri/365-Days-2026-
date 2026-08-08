@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Synthwave Beat Hero - Game Rhythm Neon Futuristik karya Day 008 dalam proyek 365 Days Code.">
+    <meta name="keywords" content="Synthwave Beat Hero, Rhythm Game, HTML5 Canvas Game, Web Audio API, Cyberpunk Game, JavaScript Game, 365 Days Challenge">
+    <meta name="author" content="Nuzaimbirri">
+    <title>Day 008 - Synthwave Beat Hero: Neon Rhythm</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600;800;900&family=Rajdhani:wght@500;600;700&family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
+    
+    <!-- CSS Stylesheet -->
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Animated Cyber Glow -->
+    <div class="cyber-bg-overlay"></div>
+    <div class="grid-floor-bg"></div>
+
+    <!-- Main App Wrapper -->
+    <div id="game-app" class="app-container">
+        
+        <!-- Header HUD Bar -->
+        <header class="game-header">
+            <div class="header-brand">
+                <span class="badge">DAY 008</span>
+                <h1 class="logo-text">SYNTHWAVE <span class="neon-accent">BEAT HERO</span></h1>
+            </div>
+
+            <!-- In-game Stats Display -->
+            <div id="hud-stats" class="hud-stats-group hidden">
+                <div class="stat-pill score-pill">
+                    <span class="stat-label">SCORE</span>
+                    <span id="score-val" class="stat-value">000,000</span>
+                </div>
+                
+                <div class="stat-pill accuracy-pill">
+                    <span class="stat-label">ACCURACY</span>
+                    <span id="accuracy-val" class="stat-value">100.0%</span>
+                </div>
+
+                <div class="stat-pill combo-pill">
+                    <span class="stat-label">MAX COMBO</span>
+                    <span id="max-combo-val" class="stat-value">0x</span>
+                </div>
+
+                <div class="stat-pill multiplier-pill">
+                    <span class="stat-label">MULTIPLIER</span>
+                    <span id="multiplier-val" class="stat-value neon-glow-yellow">1x</span>
+                </div>
+            </div>
+
+            <div class="header-actions">
+                <button id="btn-pause" class="icon-btn hidden" title="Pause Game (ESC / P)">⏸️</button>
+                <button id="btn-audio-toggle" class="icon-btn" title="Mute / Unmute">🔊</button>
+            </div>
+        </header>
+
+        <!-- Main Workspace Canvas Area -->
+        <main class="game-workspace">
+            <!-- Canvas Container for 3D Perspective Rhythm Highway -->
+            <div class="highway-container">
+                <canvas id="rhythmCanvas" width="800" height="700"></canvas>
+                
+                <!-- Floating Feedback Effect Text (PERFECT, GREAT, MISS) -->
+                <div id="judgment-popup" class="judgment-popup hidden">
+                    <span id="judgment-text" class="judgment-text">PERFECT</span>
+                </div>
+
+                <!-- Combo Counter Floating Display -->
+                <div id="combo-display" class="combo-display hidden">
+                    <span id="combo-count" class="combo-number">0</span>
+                    <span class="combo-label">COMBO</span>
+                </div>
+
+                <!-- Cyber Health / Energy Shield Bar -->
+                <div id="energy-bar-container" class="energy-bar-container hidden">
+                    <div class="energy-label">CYBER SHIELD</div>
+                    <div class="energy-track">
+                        <div id="energy-fill" class="energy-fill" style="width: 100%;"></div>
+                    </div>
+                </div>
+
+                <!-- Mobile / Touch Controls Overlay (On-screen Lane Buttons) -->
+                <div id="touch-controls" class="touch-controls-bar">
+                    <button class="touch-lane-btn lane-0" data-lane="0">
+                        <span class="key-bind">D</span>
+                    </button>
+                    <button class="touch-lane-btn lane-1" data-lane="1">
+                        <span class="key-bind">F</span>
+                    </button>
+                    <button class="touch-lane-btn lane-2" data-lane="2">
+                        <span class="key-bind">J</span>
+                    </button>
+                    <button class="touch-lane-btn lane-3" data-lane="3">
+                        <span class="key-bind">K</span>
+                    </button>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <!-- Start / Song Selection Screen Modal -->
+    <div id="modal-song-select" class="modal-backdrop">
+        <div class="modal-card main-menu-card">
+            <div class="modal-header">
+                <span class="modal-badge font-accent">CHALLENGE DAY 008</span>
+                <h2 class="title-glow">SYNTHWAVE BEAT HERO</h2>
+                <p class="subtitle">Tekan tombol yang tepat sesuai alunan nada neon synthwave!</p>
+            </div>
+
+            <!-- Song Selection Carousel / List -->
+            <div class="song-select-section">
+                <h3 class="section-title">🎵 PILIH LAGU & TRAK</h3>
+                <div class="song-grid" id="song-grid">
+                    <!-- Song 1 -->
+                    <div class="song-card active" data-song="cyber-pulse">
+                        <div class="song-icon">⚡</div>
+                        <div class="song-info">
+                            <h4 class="song-title">CYBER PULSE 1984</h4>
+                            <p class="song-meta">120 BPM • Classic Synthwave</p>
+                        </div>
+                        <span class="diff-badge easy">NORMAL</span>
+                    </div>
+
+                    <!-- Song 2 -->
+                    <div class="song-card" data-song="neon-highway">
+                        <div class="song-icon">🏎️</div>
+                        <div class="song-info">
+                            <h4 class="song-title">NEON HIGHWAY RUSH</h4>
+                            <p class="song-meta">138 BPM • Retrowave Overdrive</p>
+                        </div>
+                        <span class="diff-badge medium">HARD</span>
+                    </div>
+
+                    <!-- Song 3 -->
+                    <div class="song-card" data-song="darksynth-fury">
+                        <div class="song-icon">🔥</div>
+                        <div class="song-info">
+                            <h4 class="song-title">DARKSYNTH FURY</h4>
+                            <p class="song-meta">155 BPM • Cyberpunk Metal</p>
+                        </div>
+                        <span class="diff-badge hard">EXPERT</span>
+                    </div>
+
+                    <!-- Custom MP3 Upload Option -->
+                    <div class="song-card custom-card" id="card-custom-mp3">
+                        <div class="song-icon">📂</div>
+                        <div class="song-info">
+                            <h4 class="song-title">UPLOAD MUSIK SENDIRI</h4>
+                            <p class="song-meta">File Audio .MP3 / .WAV / .OGG</p>
+                        </div>
+                        <input type="file" id="mp3-file-input" accept="audio/*" class="hidden-file-input">
+                    </div>
+                </div>
+            </div>
+
+            <!-- Settings Bar (Speed, Key Bindings, High Score) -->
+            <div class="menu-settings-grid">
+                <div class="setting-item">
+                    <label for="select-speed">Kecepatan Note:</label>
+                    <select id="select-speed" class="cyber-select">
+                        <option value="1.0">1.0x (Santai)</option>
+                        <option value="1.25" selected>1.25x (Standar)</option>
+                        <option value="1.5">1.5x (Cepat)</option>
+                        <option value="2.0">2.0x (Extreme)</option>
+                    </select>
+                </div>
+
+                <div class="setting-item">
+                    <label for="select-keys">Layout Tombol:</label>
+                    <select id="select-keys" class="cyber-select">
+                        <option value="DFJK" selected>D - F - J - K (Rekomendasi)</option>
+                        <option value="ASKL">A - S - K - L</option>
+                        <option value="1234">1 - 2 - 3 - 4</option>
+                    </select>
+                </div>
+
+                <div class="setting-item highscore-item">
+                    <span class="hs-label">🏆 Rekor Tertinggi:</span>
+                    <span id="global-highscore" class="hs-value">000,000</span>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button id="btn-start-game" class="btn-primary glow-btn large-btn">
+                    ▶ MULAI MAIN
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Pause Modal -->
+    <div id="modal-pause" class="modal-backdrop hidden">
+        <div class="modal-card pause-card">
+            <h2 class="title-glow yellow-text">PERMAINAN DIJEDA</h2>
+            <p>Pilih tindakan berikutnya:</p>
+            <div class="button-stack margin-top-md">
+                <button id="btn-resume-pause" class="btn-primary glow-btn">LANJUTKAN</button>
+                <button id="btn-restart-pause" class="btn-secondary">ULANGI LAGU</button>
+                <button id="btn-menu-pause" class="btn-danger">KEMBALI KE MENU</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Game Over / Results Screen Modal -->
+    <div id="modal-results" class="modal-backdrop hidden">
+        <div class="modal-card results-card">
+            <div class="results-header">
+                <span id="rank-badge" class="rank-badge rank-s">SSS</span>
+                <h2 id="results-title" class="title-glow">STAGE CLEARED!</h2>
+                <p id="results-song-name" class="results-song-name">CYBER PULSE 1984</p>
+            </div>
+
+            <div class="results-grid">
+                <div class="result-box score-box">
+                    <span class="box-label">SKOR AKHIR</span>
+                    <h3 id="result-final-score">000,000</h3>
+                </div>
+
+                <div class="result-box">
+                    <span class="box-label">AKURASI</span>
+                    <h3 id="result-accuracy">98.5%</h3>
+                </div>
+
+                <div class="result-box">
+                    <span class="box-label">MAX COMBO</span>
+                    <h3 id="result-max-combo">142x</h3>
+                </div>
+            </div>
+
+            <!-- Breakdown Hits Details -->
+            <div class="breakdown-container">
+                <div class="breakdown-item perfect-break">
+                    <span>PERFECT</span>
+                    <strong id="cnt-perfect">0</strong>
+                </div>
+                <div class="breakdown-item great-break">
+                    <span>GREAT</span>
+                    <strong id="cnt-great">0</strong>
+                </div>
+                <div class="breakdown-item good-break">
+                    <span>GOOD</span>
+                    <strong id="cnt-good">0</strong>
+                </div>
+                <div class="breakdown-item miss-break">
+                    <span>MISS</span>
+                    <strong id="cnt-miss">0</strong>
+                </div>
+            </div>
+
+            <div id="new-highscore-notice" class="new-highscore-notice hidden">
+                🎉 REKOR SKOR BARU TERPACU! 🎉
+            </div>
+
+            <div class="modal-footer button-group">
+                <button id="btn-retry-results" class="btn-primary glow-btn">MAIN LAGI</button>
+                <button id="btn-menu-results" class="btn-secondary">PILIH LAGU LAIN</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main JavaScript File -->
+    <script src="script.js"></script>
+</body>
+</html>
