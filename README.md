@@ -18,6 +18,7 @@ Repo ini berisi dokumentasi dari setiap proyek kecil yang saya buat.
 | **006** | Cyber Strike: Neon Survivor | HTML5 Canvas, JS, Web Audio API | [Here](./Day_006) | ✅ |
 | **007** | Cyber Core: Grid Defense | HTML5 Canvas, JS, Strategy TD | [Here](./Day_007) | ✅ |
 | **008** | Synthwave Beat Hero: Neon Rhythm | HTML5 Canvas, Web Audio API, Rhythm Engine | [Here](./Day_008) | ✅ |
+| **009** | Neon Quantum Sandbox: Cosmic Gravity | HTML5 Canvas, Web Audio API, Physics Engine | [Here](./Day_009) | ✅ |
 
 ## 📂 Daily Projects
 
@@ -30,6 +31,7 @@ Repo ini berisi dokumentasi dari setiap proyek kecil yang saya buat.
 * [Day 006: Cyber Strike: Neon Survivor](./Day_006)
 * [Day 007: Cyber Core: Grid Defense](./Day_007)
 * [Day 008: Synthwave Beat Hero: Neon Rhythm](./Day_008)
+* [Day 009: Neon Quantum Sandbox: Cosmic Gravity](./Day_009)
 
 ---
 *"Consistency is key."*
