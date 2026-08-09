@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Neon Quantum Sandbox - Cosmic Gravity & Physics | Day 009</title>
+    <meta name="description" content="Simulasi Fisika Partikel & Gravitasi Neon Interaktif dengan Web Audio Synthesizer real-time.">
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Orbitron:wght@400;600;800;900&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
+    <!-- FontAwesome for icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div id="app-container">
+        <!-- Canvas Layer -->
+        <canvas id="physics-canvas"></canvas>
+
+        <!-- Top Header Navigation Bar -->
+        <header id="top-bar">
+            <div class="brand">
+                <a href="../" class="back-btn" title="Kembali ke Master Repo"><i class="fa-solid fa-arrow-left"></i></a>
+                <div class="brand-title">
+                    <span class="day-tag">DAY 009</span>
+                    <h1>NEON QUANTUM <span>SANDBOX</span></h1>
+                </div>
+            </div>
+
+            <!-- Quick Action Preset Buttons -->
+            <div class="preset-group">
+                <span class="preset-label"><i class="fa-solid fa-wand-magic-sparkles"></i> Preset:</span>
+                <button class="preset-btn active" data-preset="galaxy"><i class="fa-solid fa-dharmachakra"></i> Galaksi</button>
+                <button class="preset-btn" data-preset="supernova"><i class="fa-solid fa-burst"></i> Supernova</button>
+                <button class="preset-btn" data-preset="binary"><i class="fa-solid fa-atom"></i> Dual Blackhole</button>
+                <button class="preset-btn" data-preset="chaos"><i class="fa-solid fa-volcano"></i> Quantum Chaos</button>
+            </div>
+
+            <!-- Control Actions -->
+            <div class="top-controls">
+                <button id="btn-pause" class="icon-btn" title="Play / Pause Simulasi"><i class="fa-solid fa-pause"></i></button>
+                <button id="btn-clear" class="icon-btn danger" title="Bersihkan Semua Partikel"><i class="fa-solid fa-trash-can"></i></button>
+                <button id="btn-audio" class="icon-btn" title="Aktifkan / Matikan Audio Synth"><i class="fa-solid fa-volume-xmark"></i></button>
+                <button id="btn-help" class="icon-btn" title="Panduan Penggunaan"><i class="fa-solid fa-circle-info"></i></button>
+                <button id="btn-fullscreen" class="icon-btn" title="Layar Penuh"><i class="fa-solid fa-expand"></i></button>
+            </div>
+        </header>
+
+        <!-- Floating HUD Stats -->
+        <div id="hud-stats">
+            <div class="stat-item"><span class="stat-label">FPS</span><span id="stat-fps" class="stat-value">60</span></div>
+            <div class="stat-item"><span class="stat-label">PARTIKEL</span><span id="stat-particles" class="stat-value">0</span></div>
+            <div class="stat-item"><span class="stat-label">SUMUR GRAVITASI</span><span id="stat-wells" class="stat-value">0</span></div>
+        </div>
+
+        <!-- Floating Sidebar Control Panel -->
+        <aside id="control-panel" class="glass-panel">
+            <div class="panel-header">
+                <h2><i class="fa-solid fa-sliders"></i> Control Center</h2>
+                <button id="toggle-panel-btn" class="mini-btn"><i class="fa-solid fa-chevron-left"></i></button>
+            </div>
+
+            <div class="panel-body">
+                <!-- Tool Selection -->
+                <div class="control-group">
+                    <label class="group-title"><i class="fa-solid fa-hand-pointer"></i> Mode Alat Interaksi</label>
+                    <div class="tool-grid">
+                        <button class="tool-btn active" data-tool="spawn">
+                            <i class="fa-solid fa-spray-can"></i>
+                            <span>Semprot</span>
+                        </button>
+                        <button class="tool-btn" data-tool="blackhole">
+                            <i class="fa-solid fa-circle-dot"></i>
+                            <span>Blackhole</span>
+                        </button>
+                        <button class="tool-btn" data-tool="whitehole">
+                            <i class="fa-solid fa-sun"></i>
+                            <span>Whitehole</span>
+                        </button>
+                        <button class="tool-btn" data-tool="shockwave">
+                            <i class="fa-solid fa-wave-square"></i>
+                            <span>Shockwave</span>
+                        </button>
+                        <button class="tool-btn" data-tool="vortex">
+                            <i class="fa-solid fa-tornado"></i>
+                            <span>Vortex</span>
+                        </button>
+                        <button class="tool-btn" data-tool="eraser">
+                            <i class="fa-solid fa-eraser"></i>
+                            <span>Hapus</span>
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Particle Type Selection -->
+                <div class="control-group">
+                    <label class="group-title"><i class="fa-solid fa-palette"></i> Jenis Partikel Semprot</label>
+                    <div class="particle-type-grid">
+                        <button class="ptype-btn active" data-type="photon" style="--p-color: #00f3ff;">
+                            <span class="dot"></span> Photon (Cyan)
+                        </button>
+                        <button class="ptype-btn" data-type="plasma" style="--p-color: #ff0055;">
+                            <span class="dot"></span> Plasma (Magenta)
+                        </button>
+                        <button class="ptype-btn" data-type="antimatter" style="--p-color: #ffaa00;">
+                            <span class="dot"></span> Anti-Matter (Gold)
+                        </button>
+                        <button class="ptype-btn" data-type="stardust" style="--p-color: #00ff66;">
+                            <span class="dot"></span> Star Dust (Lime)
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Sliders for Physics & Environment -->
+                <div class="control-group">
+                    <label class="group-title"><i class="fa-solid fa-atom"></i> Parameter Fisika</label>
+                    
+                    <div class="slider-item">
+                        <div class="slider-header">
+                            <span>Kekuatan Gravitasi (G)</span>
+                            <span id="val-gravity">1.2</span>
+                        </div>
+                        <input type="range" id="slider-gravity" min="0" max="5" step="0.1" value="1.2">
+                    </div>
+
+                    <div class="slider-item">
+                        <div class="slider-header">
+                            <span>Frikasi / Hambatan Udara</span>
+                            <span id="val-friction">0.997</span>
+                        </div>
+                        <input type="range" id="slider-friction" min="0.95" max="1.0" step="0.001" value="0.997">
+                    </div>
+
+                    <div class="slider-item">
+                        <div class="slider-header">
+                            <span>Panjang Jejak Visual</span>
+                            <span id="val-trail">0.15</span>
+                        </div>
+                        <input type="range" id="slider-trail" min="0.02" max="0.5" step="0.01" value="0.15">
+                    </div>
+
+                    <div class="slider-item">
+                        <div class="slider-header">
+                            <span>Laju Semprot Partikel</span>
+                            <span id="val-spray-rate">15</span>
+                        </div>
+                        <input type="range" id="slider-spray-rate" min="1" max="50" step="1" value="15">
+                    </div>
+                </div>
+
+                <!-- Wall Boundary Mode -->
+                <div class="control-group">
+                    <label class="group-title"><i class="fa-solid fa-border-all"></i> Batas Dinding Canvas</label>
+                    <div class="select-wrapper">
+                        <select id="select-boundary">
+                            <option value="bounce" selected>Pantul Dinding (Elastic Bounce)</option>
+                            <option value="wrap">Tembus Sisi (Screen Wrap)</option>
+                            <option value="infinite">Bebas (Infinite / Fade Out)</option>
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Action buttons -->
+                <div class="control-group action-buttons">
+                    <button id="btn-burst" class="primary-btn"><i class="fa-solid fa-volcano"></i> Semburan Partikel</button>
+                    <button id="btn-reset-wells" class="secondary-btn"><i class="fa-solid fa-rotate-left"></i> Reset Gravity Wells</button>
+                </div>
+            </div>
+        </aside>
+
+        <!-- Onboarding Instruction Overlay Modal -->
+        <div id="help-modal" class="modal-overlay">
+            <div class="modal-content glass-panel">
+                <button id="close-modal" class="close-btn">&times;</button>
+                <h2><i class="fa-solid fa-atom"></i> Quantum Physics Sandbox Guide</h2>
+                <p>Selamat datang di <strong>Neon Quantum Sandbox</strong>! Eksplorasi simulasi gravitasi dan fisika partikel real-time.</p>
+
+                <div class="help-grid">
+                    <div class="help-card">
+                        <i class="fa-solid fa-mouse-pointer"></i>
+                        <h3>Klik & Drag</h3>
+                        <p>Semprot partikel neon atau pindahkan Blackhole/Whitehole di canvas.</p>
+                    </div>
+                    <div class="help-card">
+                        <i class="fa-solid fa-circle-dot"></i>
+                        <h3>Blackhole & Whitehole</h3>
+                        <p>Blackhole menarik partikel ke pusatnya, sementara Whitehole menolaknya.</p>
+                    </div>
+                    <div class="help-card">
+                        <i class="fa-solid fa-wave-square"></i>
+                        <h3>Shockwave Tool</h3>
+                        <p>Klik di mana saja untuk memancarkan gelombang kejutan gaya kinetik.</p>
+                    </div>
+                    <div class="help-card">
+                        <i class="fa-solid fa-music"></i>
+                        <h3>Web Audio Synthesizer</h3>
+                        <p>Aktifkan audio untuk mendengar nada harmonik interaktif saat partikel berinteraksi.</p>
+                    </div>
+                </div>
+
+                <div class="modal-footer">
+                    <button id="btn-start" class="primary-btn pulse">Mulai Eksplorasi <i class="fa-solid fa-rocket"></i></button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
