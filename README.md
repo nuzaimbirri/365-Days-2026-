@@ -34,4 +34,3 @@ Repo ini berisi dokumentasi dari setiap proyek kecil yang saya buat.
 * [Day 009: Neon Quantum Sandbox: Cosmic Gravity](./Day_009)
 
 ---
-*"Consistency is key."*
