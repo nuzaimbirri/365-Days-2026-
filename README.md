@@ -1,5 +1,5 @@
 # 🚀 365 Days of Code Challenge
-
+Nuzaim Birri
 Saya menantang diri sendiri untuk coding setiap hari selama 365 hari ke depan! 
 Repo ini berisi dokumentasi dari setiap proyek kecil yang saya buat.
 
